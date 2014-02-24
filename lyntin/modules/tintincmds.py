@@ -391,7 +391,7 @@ def read_cmd(ses, args, input):
 
   try:
     # http reading contributed by Sebastian John
-    if filename.startswith("http://"):
+    if filename.startswith("http://") or filename.startswith("https://"):
       contents = utils.http_get(filename).split("\n")
     else:
       f = open(filename, "r")

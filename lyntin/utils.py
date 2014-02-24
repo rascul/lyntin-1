@@ -189,27 +189,15 @@ def http_get(url):
 
   @raises ValueError: if the url is not valid or if the resource doesn't exist
   """
-  import httplib
-  if url.find("http://") == -1:
-    raise ValueError("This is not a valid url.")
-
-  filename = url[7:]
-
-  if filename.find("/") == -1:
-    filename += "/"
-  host, resource = filename.split("/", 1)
-
-  resource = "/" + resource
-  sock = httplib.HTTPConnection(host)
-  sock.request("GET", resource)
-  r = sock.getresponse()
-  status = r.status
-  reason = r.reason
-  data = r.read()
-
-  if status != 200:
-    raise ValueError("HTTP error: %d %s" % (status, reason))
-
+  from urllib2 import urlopen, HTTPError, URLError
+  try:
+    f = urlopen(url)
+    data = f.read()
+    f.close()
+  except HTTPError, err:
+    raise ValueError("HTTP error: %s" % err.code)
+  except URLError, err:
+    raise ValueError("URL error: %s" % err.reason)
   return data
 
 
